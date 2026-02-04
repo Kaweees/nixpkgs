@@ -1368,8 +1368,6 @@ with pkgs;
     };
   };
 
-  ArchiSteamFarm = callPackage ../applications/misc/ArchiSteamFarm { };
-
   arduino = arduino-core.override { withGui = true; };
 
   arduino-core = callPackage ../development/embedded/arduino/arduino-core/chrootenv.nix { };
@@ -3335,11 +3333,6 @@ with pkgs;
   playwright = playwright-driver;
   playwright-driver = (callPackage ../development/web/playwright/driver.nix { }).playwright-core;
   playwright-test = (callPackage ../development/web/playwright/driver.nix { }).playwright-test;
-
-  inherit (callPackage ../servers/plik { })
-    plik
-    plikd
-    ;
 
   plex = callPackage ../servers/plex { };
 
@@ -6238,12 +6231,6 @@ with pkgs;
 
   watson-ruby = callPackage ../development/tools/misc/watson-ruby { };
 
-  xcbuild = callPackage ../by-name/xc/xcbuild/package.nix {
-    stdenv =
-      # xcbuild is included in the SDK. Avoid an infinite recursion by using a bootstrap stdenv.
-      if stdenv.hostPlatform.isDarwin then darwin.bootstrapStdenv else stdenv;
-  };
-
   xcbuildHook = makeSetupHook {
     name = "xcbuild-hook";
     propagatedBuildInputs = [ xcbuild ];
@@ -8439,9 +8426,6 @@ with pkgs;
   };
 
   minio = callPackage ../servers/minio { };
-  # Keep around to allow people to migrate their data from the old legacy fs format
-  # https://github.com/minio/minio/releases/tag/RELEASE.2022-10-29T06-21-33Z
-  minio_legacy_fs = callPackage ../servers/minio/legacy_fs.nix { };
 
   mkchromecast = libsForQt5.callPackage ../applications/networking/mkchromecast { };
 
@@ -8838,71 +8822,61 @@ with pkgs;
 
   virtualenv-clone = with python3Packages; toPythonApplication virtualenv-clone;
 
-  xorg = recurseIntoAttrs (makeScopeWithSplicing' {
-    otherSplices = generateSplicesForMkScope "xorg";
-    # Use `lib.callPackageWith __splicedPackages` rather than plain `callPackage`
-    # so as not to have the newly bound xorg items already in scope,  which would
-    # have created a cycle.
-    f = lib.callPackageWith __splicedPackages ../servers/x11/xorg { };
-  });
-
-  inherit (xorg)
-    fontadobe100dpi
-    fontadobeutopia100dpi
-    fontbh100dpi
-    fontbhlucidatypewriter100dpi
-    fontbitstream100dpi
-    fontutil
-    libAppleWM
-    libFS
-    libICE
-    libSM
-    libX11
-    libXScrnSaver
-    libXau
-    libXaw
-    libXcomposite
-    libXcursor
-    libXdamage
-    libXdmcp
-    libXext
-    libXfixes
-    libXfont2
-    libXft
-    libXi
-    libXinerama
-    libXmu
-    libXp
-    libXpm
-    libXpresent
-    libXrandr
-    libXrender
-    libXres
-    libXt
-    libXtst
-    libXv
-    libXvMC
-    libXxf86dga
-    libXxf86misc
-    libXxf86vm
-    libpthreadstubs
-    mkfontdir
-    utilmacros
-    xcbproto
-    xcbutil
-    xcbutilcursor
-    xcbutilerrors
-    xcbutilimage
-    xcbutilkeysyms
-    xcbutilrenderutil
-    xcbutilwm
-    xf86inputevdev
-    xf86inputlibinput
-    xf86videonouveau
-    xkeyboardconfig
-    xorgcffiles
-    xorgserver
-    ;
+  fontadobe100dpi = font-adobe-100dpi;
+  fontadobeutopia100dpi = font-adobe-utopia-100dpi;
+  fontbh100dpi = font-bh-100dpi;
+  fontbhlucidatypewriter100dpi = font-bh-lucidatypewriter-100dpi;
+  fontbitstream100dpi = font-bitstream-100dpi;
+  fontutil = font-util;
+  libAppleWM = libapplewm;
+  libFS = libfs;
+  libICE = libice;
+  libpthreadstubs = libpthread-stubs;
+  libSM = libsm;
+  libX11 = libx11;
+  libXau = libxau;
+  libXaw = libxaw;
+  libXcomposite = libxcomposite;
+  libXcursor = libxcursor;
+  libXdamage = libxdamage;
+  libXdmcp = libxdmcp;
+  libXext = libxext;
+  libXfixes = libxfixes;
+  libXfont2 = libxfont_2;
+  libXft = libxft;
+  libXi = libxi;
+  libXinerama = libxinerama;
+  libXmu = libxmu;
+  libXp = libxp;
+  libXpm = libxpm;
+  libXpresent = libxpresent;
+  libXrandr = libxrandr;
+  libXrender = libxrender;
+  libXres = libxres;
+  libXScrnSaver = libxscrnsaver;
+  libXt = libxt;
+  libXtst = libxtst;
+  libXv = libxv;
+  libXvMC = libxvmc;
+  libXxf86dga = libxxf86dga;
+  libXxf86misc = libxxf86misc;
+  libXxf86vm = libxxf86vm;
+  mkfontdir = mkfontscale;
+  utilmacros = util-macros;
+  xcbproto = xcb-proto;
+  xcbutil = libxcb-util;
+  xcbutilcursor = libxcb-cursor;
+  xcbutilerrors = libxcb-errors;
+  xcbutilimage = libxcb-image;
+  xcbutilkeysyms = libxcb-keysyms;
+  xcbutilrenderutil = libxcb-render-util;
+  xcbutilwm = libxcb-wm;
+  xf86inputevdev = xf86-input-evdev;
+  xf86inputlibinput = xf86-input-libinput;
+  xf86videonouveau = xf86-video-nouveau;
+  xkeyboardconfig = xkeyboard-config;
+  xorgcffiles = xorg-cf-files;
+  xorgserver = xorg-server;
 
   zabbixFor = version: rec {
     agent = (callPackages ../servers/monitoring/zabbix/agent.nix { }).${version};
@@ -9492,12 +9466,6 @@ with pkgs;
 
   dejavu_fonts = lowPrio (callPackage ../data/fonts/dejavu-fonts { });
 
-  # solve collision for nix-env before https://github.com/NixOS/nix/pull/815
-  dejavu_fontsEnv = buildEnv {
-    name = dejavu_fonts.name;
-    paths = [ dejavu_fonts.out ];
-  };
-
   docbook_sgml_dtd_31 = callPackage ../data/sgml+xml/schemas/sgml-dtd/docbook/3.1.nix { };
 
   docbook_sgml_dtd_41 = callPackage ../data/sgml+xml/schemas/sgml-dtd/docbook/4.1.nix { };
@@ -9541,22 +9509,8 @@ with pkgs;
 
   spacx-gtk-theme = callPackage ../data/themes/gtk-theme-framework { theme = "spacx"; };
 
-  inherit
-    ({
-      gruppled-black-cursors = callPackage ../data/icons/gruppled-cursors { theme = "gruppled_black"; };
-      gruppled-black-lite-cursors = callPackage ../data/icons/gruppled-lite-cursors {
-        theme = "gruppled_black_lite";
-      };
-      gruppled-white-cursors = callPackage ../data/icons/gruppled-cursors { theme = "gruppled_white"; };
-      gruppled-white-lite-cursors = callPackage ../data/icons/gruppled-lite-cursors {
-        theme = "gruppled_white_lite";
-      };
-    })
-    gruppled-black-cursors
-    gruppled-black-lite-cursors
-    gruppled-white-cursors
-    gruppled-white-lite-cursors
-    ;
+  gruppled-white-cursors = gruppled-black-cursors.override { theme = "white"; };
+  gruppled-white-lite-cursors = gruppled-black-lite-cursors.override { theme = "white"; };
 
   iosevka-comfy = recurseIntoAttrs (callPackages ../data/fonts/iosevka/comfy.nix { });
 
@@ -9725,10 +9679,6 @@ with pkgs;
   };
 
   audacious = audacious-bare.override { withPlugins = true; };
-
-  audacity = callPackage ../by-name/au/audacity/package.nix {
-    ffmpeg = ffmpeg_7;
-  };
 
   bambootracker-qt6 = bambootracker.override { withQt6 = true; };
 
@@ -12358,10 +12308,6 @@ with pkgs;
     ocamlPackages = ocaml-ng.ocamlPackages_4_12;
   };
 
-  bitwuzla = callPackage ../by-name/bi/bitwuzla/package.nix {
-    cadical = cadical.override { version = "2.1.3"; };
-  };
-
   inherit
     (callPackage ./rocq-packages.nix {
       inherit (ocaml-ng)
@@ -12437,10 +12383,6 @@ with pkgs;
       dontDisableStatic = true;
     });
     stdenv = gccStdenv;
-  };
-
-  cvc5 = callPackage ../by-name/cv/cvc5/package.nix {
-    cadical = cadical.override { version = "2.1.3"; };
   };
 
   ekrhyper = callPackage ../applications/science/logic/ekrhyper {

@@ -816,6 +816,10 @@ self: super: with self; {
 
   apiflask = callPackage ../development/python-modules/apiflask { };
 
+  apify-fingerprint-datapoints =
+    callPackage ../development/python-modules/apify-fingerprint-datapoints
+      { };
+
   apipkg = callPackage ../development/python-modules/apipkg { };
 
   apischema = callPackage ../development/python-modules/apischema { };
@@ -3599,8 +3603,6 @@ self: super: with self; {
 
   datashaper = callPackage ../development/python-modules/datashaper { };
 
-  datatable = callPackage ../development/python-modules/datatable { };
-
   datauri = callPackage ../development/python-modules/datauri { };
 
   datefinder = callPackage ../development/python-modules/datefinder { };
@@ -4970,6 +4972,8 @@ self: super: with self; {
   environs = callPackage ../development/python-modules/environs { };
 
   envisage = callPackage ../development/python-modules/envisage { };
+
+  envoy-data-plane = callPackage ../development/python-modules/envoy-data-plane { };
 
   envoy-reader = callPackage ../development/python-modules/envoy-reader { };
 
@@ -9180,6 +9184,8 @@ self: super: with self; {
 
   lpc-checksum = callPackage ../development/python-modules/lpc-checksum { };
 
+  lpips = callPackage ../development/python-modules/lpips { };
+
   lrcalc-python = callPackage ../development/python-modules/lrcalc-python { };
 
   lrclibapi = callPackage ../development/python-modules/lrclibapi { };
@@ -13349,6 +13355,8 @@ self: super: with self; {
   pydiscovergy = callPackage ../development/python-modules/pydiscovergy { };
 
   pydispatcher = callPackage ../development/python-modules/pydispatcher { };
+
+  pydivsufsort = callPackage ../development/python-modules/pydivsufsort { };
 
   pydle = callPackage ../development/python-modules/pydle { };
 
@@ -20008,8 +20016,6 @@ self: super: with self; {
     inherit (pkgs) typesense curl;
   };
 
-  typesentry = callPackage ../development/python-modules/typesentry { };
-
   typeshed-client = callPackage ../development/python-modules/typeshed-client { };
 
   typing = null;
@@ -20067,6 +20073,8 @@ self: super: with self; {
   ufal-chu-liu-edmonds = callPackage ../development/python-modules/ufal-chu-liu-edmonds { };
 
   ufmt = callPackage ../development/python-modules/ufmt { };
+
+  ufo-extractor = callPackage ../development/python-modules/ufo-extractor { };
 
   ufo2ft = callPackage ../development/python-modules/ufo2ft { };
 
